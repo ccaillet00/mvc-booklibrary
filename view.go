@@ -20,3 +20,21 @@ func printMenu() {
 func GoodbyeMessage() {
 	fmt.Println("Exiting the Book Library App. Goodbye!")
 }
+
+func printBookInformation() {
+	fmt.Println(`Pleae enter all information based on this patern:
+Pattern: ISBN, Title, Author, PublishedYear:`)
+}
+
+func printBookList(bookToPrint []Book) {
+	for i, book := range bookToPrint {
+		fmt.Println(i+1, "| ISBN:", book.ISBN+",",
+			"Title", book.Title+",",
+			"Author", book.Author+",",
+			"Available", book.Available)
+	}
+}
+
+func printContinue() {
+	fmt.Println("\nDrücke Enter um fortzufahren...")
+}
