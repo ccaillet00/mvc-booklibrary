@@ -25,6 +25,7 @@ func parseCommand(input string) {
 		printBookList(allBooks)
 		printContinue()
 		askForCommand()
+		clearTerminal()
 		printMenu()
 	case "q":
 		GoodbyeMessage()
