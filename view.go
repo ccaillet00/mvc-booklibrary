@@ -7,7 +7,7 @@ func printMenu() {
 ###########################################
 #******* WELCOME TO OUR LIBRARY ***********
 # 1. ADD A BOOK TO LIBRARY
-# 2. REMOVE A BOOK FROM LIBRARY
+# . REMOVE A BOOK FROM LIBRARY
 # 3. CHECK AVAILABILITY
 # 4. LEND A BOOK
 # 5. RETURN A BOOK
@@ -37,4 +37,32 @@ func printBookList(bookToPrint []Book) {
 
 func printContinue() {
 	fmt.Println("\nDrücke Enter um fortzufahren...")
+}
+
+func printEnterIsbnNumber() {
+	fmt.Println("Please enter the ISBN number:")
+}
+
+func printIsAvailable(isAvailable bool) {
+	if isAvailable {
+		fmt.Println("Yes book is available!")
+	} else {
+		fmt.Println("No the book is not available!")
+	}
+}
+
+func printIsBookBorrowed(book *Book) {
+	if book == nil {
+		fmt.Println("Sorry, book not availale!")
+		return
+	}
+	fmt.Println("Book:", book.ISBN, book.Title, "borrowed")
+}
+
+func printBookReturn(book *Book) {
+	if book == nil {
+		fmt.Println("Sorry, cant return book")
+		return
+	}
+	fmt.Println("Book", book.ISBN, book.Title, "returned")
 }

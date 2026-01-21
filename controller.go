@@ -20,6 +20,37 @@ func parseCommand(input string) {
 		AddBook(book)
 		clearTerminal()
 		printMenu()
+	case "3":
+		clearTerminal()
+		printEnterIsbnNumber()
+		isbn := askForCommand()
+		isAvailable := CheckBookAvailability(isbn)
+		printIsAvailable(isAvailable)
+		printContinue()
+		askForCommand()
+		clearTerminal()
+		printMenu()
+	case "4":
+		clearTerminal()
+		printEnterIsbnNumber()
+		isbn := askForCommand()
+		book := LendBook(isbn)
+		printIsBookBorrowed(book)
+		printContinue()
+		askForCommand()
+		clearTerminal()
+		printMenu()
+	case "5":
+		clearTerminal()
+		printEnterIsbnNumber()
+		isbn := askForCommand()
+		book := ReturnBook(isbn)
+		printBookReturn(book)
+		printContinue()
+		askForCommand()
+		clearTerminal()
+		printMenu()
+
 	case "6":
 		allBooks := FindAllBooks()
 		printBookList(allBooks)
@@ -55,7 +86,7 @@ func createBookFromInput(response string) Book {
 		Title:         parts[1],
 		Author:        parts[2],
 		PublishedYear: year,
-		Available:     false,
+		Available:     true,
 	}
 }
 
