@@ -46,3 +46,13 @@ func ReturnBook(isbn string) *Book {
 	}
 	return nil
 }
+
+func RemoveBook(isbn string) bool {
+	for i, Book := range library {
+		if Book.ISBN == isbn {
+			library = append(library[:i], library[i+1:]...)
+			return true
+		}
+	}
+	return false
+}

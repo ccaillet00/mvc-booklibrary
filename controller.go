@@ -20,11 +20,22 @@ func parseCommand(input string) {
 		AddBook(book)
 		clearTerminal()
 		printMenu()
+	case "2":
+		clearTerminal()
+		printEnterIsbnNumber()
+		isbn := askForCommand()
+		removed := RemoveBook(isbn)
+		printIsBookRemoved(removed)
+		printContinue()
+		askForCommand()
+		clearTerminal()
+		printMenu()
 	case "3":
 		clearTerminal()
 		printEnterIsbnNumber()
 		isbn := askForCommand()
 		isAvailable := CheckBookAvailability(isbn)
+		clearTerminal()
 		printIsAvailable(isAvailable)
 		printContinue()
 		askForCommand()
@@ -52,6 +63,7 @@ func parseCommand(input string) {
 		printMenu()
 
 	case "6":
+		clearTerminal()
 		allBooks := FindAllBooks()
 		printBookList(allBooks)
 		printContinue()
