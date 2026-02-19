@@ -1,7 +1,5 @@
 package main
 
-var library []Book
-
 type Book struct {
 	ISBN          string
 	Title         string
@@ -10,49 +8,49 @@ type Book struct {
 	Available     bool
 }
 
+type Repository interface {
+	Add(book Book)
+	FindAll() []Book
+	FindByISBN(isbn string) *Book
+	Update(book Book) bool
+	Remove(isbn string) bool
+}
+
+var repo Repository = NewInMemoryRepository()
+
 func AddBook(book Book) {
-	library = append(library, book)
+	repo.Add(book)
 }
 
 func FindAllBooks() []Book {
-	return library
+	return repo.FindAll()
 }
 
 func CheckBookAvailability(isbn string) bool {
-	for _, Book := range library {
-		if Book.ISBN == isbn && Book.Available {
-			return true
-		}
-	}
-	return false
+	book := repo.FindByISBN(isbn)
+	return book != nil && book.Available
 }
 
 func LendBook(isbn string) *Book {
-	for i, Book := range library {
-		if Book.ISBN == isbn && Book.Available {
-			library[i].Available = false
-			return &library[i]
-		}
+	book := repo.FindByISBN(isbn)
+	if book != nil && book.Available {
+		book.Available = false
+		repo.Update(*book)
+		return book
 	}
 	return nil
 }
 
 func ReturnBook(isbn string) *Book {
-	for i, Book := range library {
-		if Book.ISBN == isbn && !Book.Available {
-			library[i].Available = true
-			return &library[i]
-		}
+	book := repo.FindByISBN(isbn)
+	if book != nil && !book.Available {
+		book.Available = true
+		repo.Update(*book)
+		return book
 	}
 	return nil
 }
 
 func RemoveBook(isbn string) bool {
-	for i, Book := range library {
-		if Book.ISBN == isbn {
-			library = append(library[:i], library[i+1:]...)
-			return true
-		}
-	}
-	return false
+	return repo.Remove(isbn)
 }
