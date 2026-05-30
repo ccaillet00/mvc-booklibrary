@@ -1,30 +1,30 @@
 package main
 
 type InMemoryRepository struct {
-	library []Book
+	books []Book
 }
 
 func (r *InMemoryRepository) Add(book Book) {
-	r.library = append(r.library, book)
+	r.books = append(r.books, book)
 }
 
 func (r *InMemoryRepository) FindAll() []Book {
-	return r.library
+	return r.books
 }
 
 func (r *InMemoryRepository) FindByISBN(isbn string) *Book {
-	for i, Book := range r.library {
-		if Book.ISBN == isbn {
-			return &r.library[i]
+	for i, book := range r.books {
+		if book.ISBN == isbn {
+			return &r.books[i]
 		}
 	}
 	return nil
 }
 
 func (r *InMemoryRepository) Update(book Book) bool {
-	for i, Book := range r.library {
-		if Book.ISBN == book.ISBN {
-			r.library[i] = book
+	for i, b := range r.books {
+		if b.ISBN == book.ISBN {
+			r.books[i] = book
 			return true
 		}
 	}
@@ -32,17 +32,21 @@ func (r *InMemoryRepository) Update(book Book) bool {
 }
 
 func (r *InMemoryRepository) Remove(isbn string) bool {
-	for i, book := range r.library {
+	for i, book := range r.books {
 		if book.ISBN == isbn {
-			r.library = append(r.library[:i], r.library[i+1:]...)
+			r.books = append(r.books[:i], r.books[i+1:]...)
 			return true
 		}
 	}
 	return false
 }
 
-func NewInMemoryRepository() *InMemoryRepository {
+func (r *InMemoryRepository) RemoveAll() {
+
+}
+
+func NewInMemoryRepository() Repository {
 	return &InMemoryRepository{
-		library: make([]Book, 0),
+		books: make([]Book, 0),
 	}
 }

@@ -1,56 +1,54 @@
 package main
 
+type Model struct {
+	repo Repository
+}
+
+func NewModel(repo Repository) Model {
+	return Model{repo}
+}
+
 type Book struct {
 	ISBN          string
 	Title         string
 	Author        string
 	PublishedYear int
-	Available     bool
+	Borrowed      bool
 }
 
-type Repository interface {
-	Add(book Book)
-	FindAll() []Book
-	FindByISBN(isbn string) *Book
-	Update(book Book) bool
-	Remove(isbn string) bool
+func (m *Model) AddBook(b Book) {
+	m.repo.Add(b)
 }
 
-var repo Repository = NewInMemoryRepository()
-
-func AddBook(book Book) {
-	repo.Add(book)
+func (m *Model) FindAllBooks() []Book {
+	return m.repo.FindAll()
 }
 
-func FindAllBooks() []Book {
-	return repo.FindAll()
+func (m *Model) CheckBookAvailability(isbn string) bool {
+	book := m.repo.FindByISBN(isbn)
+	return book != nil && !book.Borrowed
 }
 
-func CheckBookAvailability(isbn string) bool {
-	book := repo.FindByISBN(isbn)
-	return book != nil && book.Available
-}
-
-func LendBook(isbn string) *Book {
-	book := repo.FindByISBN(isbn)
-	if book != nil && book.Available {
-		book.Available = false
-		repo.Update(*book)
+func (m *Model) LendBook(isbn string) *Book {
+	book := m.repo.FindByISBN(isbn)
+	if book != nil {
+		book.Borrowed = true
+		m.repo.Update(*book)
 		return book
 	}
 	return nil
 }
 
-func ReturnBook(isbn string) *Book {
-	book := repo.FindByISBN(isbn)
-	if book != nil && !book.Available {
-		book.Available = true
-		repo.Update(*book)
+func (m *Model) ReturnBook(isbn string) *Book {
+	book := m.repo.FindByISBN(isbn)
+	if book != nil && book.Borrowed {
+		book.Borrowed = false
+		m.repo.Update(*book)
 		return book
 	}
 	return nil
 }
 
-func RemoveBook(isbn string) bool {
-	return repo.Remove(isbn)
+func (m *Model) RemoveBook(isbn string) bool {
+	return m.repo.Remove(isbn)
 }

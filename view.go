@@ -3,6 +3,7 @@ package main
 import "fmt"
 
 func printMenu() {
+
 	fmt.Println(`
 ###########################################
 #******* WELCOME TO OUR LIBRARY ***********
@@ -13,25 +14,25 @@ func printMenu() {
 # 5. RETURN A BOOK
 # 6. VIEW ALL BOOKS
 #
-# q. TERMINATE BOOK LIBRARY APP
-`)
+# q. TERMINATE BOOK LIBRARY APP`)
 }
 
-func GoodbyeMessage() {
-	fmt.Println("Exiting the Book Library App. Goodbye!")
+func GoodBye() {
+	fmt.Println("Goodbye!")
 }
 
 func printBookInformation() {
-	fmt.Println(`Pleae enter all information based on this patern:
-Pattern: ISBN, Title, Author, PublishedYear:`)
+	fmt.Println(`
+Please enter all information based on this pattern:
+Pattern: ISBN, Title, Author, Publishing Year:`)
 }
 
-func printBookList(bookToPrint []Book) {
-	for i, book := range bookToPrint {
+func PrintBookList(booksToPrint []Book) {
+	for i, book := range booksToPrint {
 		fmt.Println(i+1, "| ISBN:", book.ISBN+",",
-			"Title", book.Title+",",
-			"Author", book.Author+",",
-			"Available", book.Available)
+			"TITLE:", book.Title+",",
+			"AUTHOR:", book.Author+",",
+			"BORROWED:", book.Borrowed)
 	}
 }
 
@@ -43,28 +44,28 @@ func printEnterIsbnNumber() {
 	fmt.Println("Please enter the ISBN number:")
 }
 
-func printIsAvailable(isAvailable bool) {
+func printIsBookAvailable(isAvailable bool) {
 	if isAvailable {
-		fmt.Println("Yes book is available!")
+		fmt.Println("Yes, the Book is available!")
 	} else {
-		fmt.Println("No the book is not available!")
+		fmt.Println("No, the Book is not available!")
 	}
 }
 
 func printIsBookBorrowed(book *Book) {
 	if book == nil {
-		fmt.Println("Sorry, book not availale!")
+		fmt.Println("Sorry, book not available!")
 		return
 	}
 	fmt.Println("Book:", book.ISBN, book.Title, "borrowed")
 }
 
-func printBookReturn(book *Book) {
+func printIsBookReturned(book *Book) {
 	if book == nil {
-		fmt.Println("Sorry, cant return book")
+		fmt.Println("Sorry, we are not expecting this book!")
 		return
 	}
-	fmt.Println("Book", book.ISBN, book.Title, "returned")
+	fmt.Println("Book:", book.ISBN, book.Title, "returned")
 }
 
 func printIsBookRemoved(removed bool) {

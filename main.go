@@ -1,29 +1,12 @@
 package main
 
 func main() {
-	addBookForTesting()
+	repo := NewJSONRepository("books.json")
+	model := NewModel(repo)
+	controller := NewController(model)
 
 	printMenu()
 	for {
-		executeCommand()
-	}
-}
-
-func addBookForTesting() {
-	AddBook(Book{
-		ISBN:          "978-3-16-148410-0",
-		Title:         "The Go Programming Language",
-		Author:        "Cédric",
-		PublishedYear: 2015,
-		Available:     true,
-	})
-	{
-		AddBook(Book{
-			ISBN:          "978-3-16-148410-1",
-			Title:         "Bingo II",
-			Author:        "Bongo",
-			PublishedYear: 2004,
-			Available:     true,
-		})
+		controller.executeCommand()
 	}
 }
