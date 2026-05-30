@@ -1,0 +1,13 @@
+services: 
+  booklibrary:
+    build: .
+    image: booklibrary:latest
+    stdin_open: true
+    tty: true
+    volumes:
+      - books-data:/data
+    restart: unless-stopped
+
+volumes:
+  books-data:
+    driver: local
