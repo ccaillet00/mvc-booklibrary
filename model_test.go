@@ -64,3 +64,52 @@ func TestCheckBookAvailability(t *testing.T) {
 		t.Errorf("Buch sollte verfügbar markiert sein")
 	}
 }
+
+func TestAvailableBook(t *testing.T) {
+	model := NewModel(NewInMemoryRepository())
+	model.AddBook(Book{ISBN: "1", Borrowed: true})
+	model.AddBook(Book{ISBN: "2", Borrowed: false})
+	model.AddBook(Book{ISBN: "3", Borrowed: true})
+
+	available := model.AvailableBooks()
+
+	if len(available) != 1 {
+		t.Fatalf("erwartet 1 verfügbares Buch, bekommen %d", len(available))
+	}
+
+	if available[0].ISBN != "2" {
+		t.Errorf("falsche Buch zurückgeben: %s", available[0].ISBN)
+	}
+}
+
+func TestBorrowedBook(t *testing.T) {
+	model := NewModel(NewInMemoryRepository())
+	model.AddBook(Book{ISBN: "1", Borrowed: true})
+	model.AddBook(Book{ISBN: "2", Borrowed: false})
+	model.AddBook(Book{ISBN: "3", Borrowed: true})
+
+	borrowed := model.BorrowedBooks()
+
+	if len(borrowed) != 2 {
+		t.Fatalf("erwartet 2 ausgeliehene Bücher, bekommen %d", len(borrowed))
+	}
+
+	if borrowed[0].ISBN != "1" || borrowed[1].ISBN != "3" {
+		t.Errorf("falsche Bücher zurückgeben: %s, %s", borrowed[0].ISBN, borrowed[1].ISBN)
+	}
+}
+
+func TestDuplicateISBN(t *testing.T) {
+	model := NewModel(NewInMemoryRepository())
+	model.AddBook(Book{ISBN: "111", Title: "Clean Code"})
+	model.AddBook(Book{ISBN: "111", Title: "Clean Code 2"})
+	model.AddBook(Book{ISBN: "222", Title: "The Pragmatic Programmer"})
+
+	duplicate := model.FindDuplicateISBN("111")
+
+	if !duplicate {
+		t.Errorf("erwartet, dass ein doppeltes ISBN gefunden wird")
+	}
+}
+
+

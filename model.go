@@ -52,3 +52,33 @@ func (m *Model) ReturnBook(isbn string) *Book {
 func (m *Model) RemoveBook(isbn string) bool {
 	return m.repo.Remove(isbn)
 }
+
+func (m *Model) AvailableBooks() []Book {
+	var available []Book
+	for _, b := range m.repo.FindAll() {
+		if !b.Borrowed {
+			available = append(available, b)
+		}
+	}
+	return available
+}
+
+func (m *Model) BorrowedBooks() []Book {
+	var borrowed []Book
+	for _, b := range m.repo.FindAll() {
+		if b.Borrowed {
+			borrowed = append(borrowed, b)
+		}
+	}
+	return borrowed
+}
+
+func (m *Model) FindDuplicateISBN(isbn string) bool {
+	var count int
+	for _, b := range m.repo.FindAll() {
+		if b.ISBN == isbn {
+			count++
+		}
+	}
+	return count > 1
+}
