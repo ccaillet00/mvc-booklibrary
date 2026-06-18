@@ -1,35 +1,38 @@
 package main
 
-import "testing"
+import (
+	"testing"
+)
 
-type SpyRepository struct {
+// ============================================================================
+// Model-Tests (Unit-Tests)
+// Testen die Geschäftslogik des Models isoliert vom Controller und View.
+// ============================================================================
+
+type spyRepository struct {
 	Repository
 	updateCalls int
 }
 
-func (s *SpyRepository) Update(book Book) bool {
-	s.updateCalls++ //mitzählen
+func (s *spyRepository) Update(book Book) bool {
+	s.updateCalls++
 	return s.Repository.Update(book)
 }
 
-func TestAddBook(t *testing.T) {
-
-	// Arrange - Ausgangslage aufbauen
+func TestModel_AddBook(t *testing.T) {
 	repo := NewInMemoryRepository()
 	model := NewModel(repo)
 
-	// Act - die zu testende Aktion
 	model.AddBook(Book{ISBN: "111", Title: "Clean Code"})
 
-	// Assert - Ergebnis behaupten
 	books := model.FindAllBooks()
 	if len(books) != 1 {
-		t.Errorf("erwartet 1 Buch, bekommen %d", len(books))
+		t.Fatalf("erwartet 1 Buch, bekommen %d", len(books))
 	}
 }
 
-func TestLendBook(t *testing.T) {
-	spy := &SpyRepository{Repository: NewInMemoryRepository()}
+func TestModel_LendBook(t *testing.T) {
+	spy := &spyRepository{Repository: NewInMemoryRepository()}
 	model := NewModel(spy)
 	model.AddBook(Book{ISBN: "111", Title: "Clean Code"})
 
@@ -40,32 +43,32 @@ func TestLendBook(t *testing.T) {
 	}
 }
 
-func TestReturnBook(t *testing.T) {
+func TestModel_ReturnBook(t *testing.T) {
 	model := NewModel(NewInMemoryRepository())
 	model.AddBook(Book{ISBN: "111", Title: "Clean Code", Borrowed: true})
 
 	book := model.ReturnBook("111")
 
 	if book == nil {
-		t.Fatal("ReturnBook gab nil zurück - erwartet das ausgeliehene Buch")
+		t.Fatal("ReturnBook gab nil zurück - erwartet das zurückgegebene Buch")
 	}
 	if book.Borrowed {
-		t.Errorf("Buch sollte zurückgegeben markiert sein")
+		t.Error("Buch sollte nach Rückgabe nicht mehr ausgeliehen sein")
 	}
 }
 
-func TestCheckBookAvailability(t *testing.T) {
+func TestModel_CheckBookAvailability(t *testing.T) {
 	model := NewModel(NewInMemoryRepository())
 	model.AddBook(Book{ISBN: "111", Title: "Clean Code"})
 
-	book := model.CheckBookAvailability("111")
+	available := model.CheckBookAvailability("111")
 
-	if !book {
-		t.Errorf("Buch sollte verfügbar markiert sein")
+	if !available {
+		t.Error("Buch sollte verfügbar sein")
 	}
 }
 
-func TestAvailableBook(t *testing.T) {
+func TestModel_AvailableBooks(t *testing.T) {
 	model := NewModel(NewInMemoryRepository())
 	model.AddBook(Book{ISBN: "1", Borrowed: true})
 	model.AddBook(Book{ISBN: "2", Borrowed: false})
@@ -76,13 +79,12 @@ func TestAvailableBook(t *testing.T) {
 	if len(available) != 1 {
 		t.Fatalf("erwartet 1 verfügbares Buch, bekommen %d", len(available))
 	}
-
 	if available[0].ISBN != "2" {
-		t.Errorf("falsche Buch zurückgeben: %s", available[0].ISBN)
+		t.Errorf("falsches Buch: erwartete ISBN '2', bekommen '%s'", available[0].ISBN)
 	}
 }
 
-func TestBorrowedBook(t *testing.T) {
+func TestModel_BorrowedBooks(t *testing.T) {
 	model := NewModel(NewInMemoryRepository())
 	model.AddBook(Book{ISBN: "1", Borrowed: true})
 	model.AddBook(Book{ISBN: "2", Borrowed: false})
@@ -93,9 +95,21 @@ func TestBorrowedBook(t *testing.T) {
 	if len(borrowed) != 2 {
 		t.Fatalf("erwartet 2 ausgeliehene Bücher, bekommen %d", len(borrowed))
 	}
-
 	if borrowed[0].ISBN != "1" || borrowed[1].ISBN != "3" {
-		t.Errorf("falsche Bücher zurückgeben: %s, %s", borrowed[0].ISBN, borrowed[1].ISBN)
+		t.Errorf("falsche Bücher: erwartete '1' und '3', bekommen '%s' und '%s'", borrowed[0].ISBN, borrowed[1].ISBN)
+	}
+}
+
+func TestModel_FindDuplicateISBN(t *testing.T) {
+	model := NewModel(NewInMemoryRepository())
+	model.AddBook(Book{ISBN: "111", Title: "Clean Code"})
+	model.AddBook(Book{ISBN: "111", Title: "Clean Code 2"})
+	model.AddBook(Book{ISBN: "222", Title: "The Pragmatic Programmer"})
+
+	duplicate := model.FindDuplicateISBN("111")
+
+	if !duplicate {
+		t.Error("erwartet, dass eine doppelte ISBN gefunden wird")
 	}
 }
 
@@ -111,5 +125,3 @@ func TestDuplicateISBN(t *testing.T) {
 		t.Errorf("erwartet, dass ein doppeltes ISBN gefunden wird")
 	}
 }
-
-
