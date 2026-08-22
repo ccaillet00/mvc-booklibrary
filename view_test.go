@@ -4,11 +4,6 @@ import (
 	"testing"
 )
 
-// ============================================================================
-// View-Tests (Unit-Tests)
-// Testen die Ausgabe-Funktionen der View-Schicht isoliert.
-// ============================================================================
-
 func TestView_PrintBookList(t *testing.T) {
 	tests := []struct {
 		name         string

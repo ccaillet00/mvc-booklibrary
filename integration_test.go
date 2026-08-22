@@ -4,11 +4,6 @@ import (
 	"testing"
 )
 
-// ============================================================================
-// Integrationstests (Outer Loop / Acceptance Tests)
-// Testen den zusammenhängenden Flow über Controller → Model → Repository.
-// ============================================================================
-
 func TestIntegration_AddBookAndCheckAvailability(t *testing.T) {
 	repo := NewInMemoryRepository()
 	model := NewModel(repo)

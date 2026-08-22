@@ -4,11 +4,6 @@ import (
 	"testing"
 )
 
-// ============================================================================
-// Model-Tests (Unit-Tests)
-// Testen die Geschäftslogik des Models isoliert vom Controller und View.
-// ============================================================================
-
 type spyRepository struct {
 	Repository
 	updateCalls int
