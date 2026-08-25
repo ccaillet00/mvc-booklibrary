@@ -4,6 +4,11 @@ services:
     image: booklibrary:latest
     stdin_open: true
     tty: true
+    environment:
+      # App mode: cli, http or both
+      - APP_MODE=${APP_MODE:-http}
+    ports:
+      - "8080:8080"
     volumes:
       - books-data:/data
     restart: unless-stopped

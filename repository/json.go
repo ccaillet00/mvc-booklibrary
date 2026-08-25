@@ -1,29 +1,33 @@
-package main
+package repository
 
 import (
 	"encoding/json"
 	"os"
+
+	"mvc-booklibrary/model"
 )
 
+// JSONRepository persists books to a JSON file.
 type JSONRepository struct {
 	filepath string
 }
 
-func NewJSONRepository(filepath string) *JSONRepository {
+// NewJSONRepository creates a new JSON file repository.
+func NewJSONRepository(filepath string) model.Repository {
 	return &JSONRepository{filepath: filepath}
 }
 
-func (r *JSONRepository) Add(book Book) {
+func (r *JSONRepository) Add(book model.Book) {
 	books := r.load()
 	books = append(books, book)
 	r.save(books)
 }
 
-func (r *JSONRepository) FindAll() []Book {
+func (r *JSONRepository) FindAll() []model.Book {
 	return r.load()
 }
 
-func (r *JSONRepository) FindByISBN(isbn string) *Book {
+func (r *JSONRepository) FindByISBN(isbn string) *model.Book {
 	books := r.load()
 	for i, book := range books {
 		if book.ISBN == isbn {
@@ -33,7 +37,7 @@ func (r *JSONRepository) FindByISBN(isbn string) *Book {
 	return nil
 }
 
-func (r *JSONRepository) Update(book Book) bool {
+func (r *JSONRepository) Update(book model.Book) bool {
 	books := r.load()
 	for i, b := range books {
 		if b.ISBN == book.ISBN {
@@ -57,17 +61,17 @@ func (r *JSONRepository) Remove(isbn string) bool {
 	return false
 }
 
-func (r *JSONRepository) load() []Book {
+func (r *JSONRepository) load() []model.Book {
 	data, err := os.ReadFile(r.filepath)
 	if err != nil {
-		return []Book{} // Datei existiert nicht? Leeres Slice!
+		return []model.Book{}
 	}
-	var books []Book
-	json.Unmarshal(data, &books) // JSON → Go
+	var books []model.Book
+	json.Unmarshal(data, &books)
 	return books
 }
 
-func (r *JSONRepository) save(books []Book) {
-	data, _ := json.MarshalIndent(books, "", "  ") // Go → JSON (schön formatiert)
-	os.WriteFile(r.filepath, data, 0644)           // In Datei schreiben
+func (r *JSONRepository) save(books []model.Book) {
+	data, _ := json.MarshalIndent(books, "", "  ")
+	os.WriteFile(r.filepath, data, 0644)
 }

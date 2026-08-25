@@ -1,9 +1,13 @@
-package main
+package view
 
-import "fmt"
+import (
+	"fmt"
 
-func printMenu() {
+	"mvc-booklibrary/model"
+)
 
+// PrintMenu prints the main menu of the library app.
+func PrintMenu() {
 	fmt.Println(`
 ###########################################
 #******* WELCOME TO OUR LIBRARY ***********
@@ -17,17 +21,20 @@ func printMenu() {
 # q. TERMINATE BOOK LIBRARY APP`)
 }
 
+// GoodBye prints a farewell message.
 func GoodBye() {
 	fmt.Println("Goodbye!")
 }
 
-func printBookInformation() {
+// PrintBookInformation prompts the user for book input.
+func PrintBookInformation() {
 	fmt.Println(`
 Please enter all information based on this pattern:
 Pattern: ISBN, Title, Author, Publishing Year:`)
 }
 
-func PrintBookList(booksToPrint []Book) {
+// PrintBookList prints a list of books.
+func PrintBookList(booksToPrint []model.Book) {
 	for i, book := range booksToPrint {
 		fmt.Println(i+1, "| ISBN:", book.ISBN+",",
 			"TITLE:", book.Title+",",
@@ -36,15 +43,18 @@ func PrintBookList(booksToPrint []Book) {
 	}
 }
 
-func printContinue() {
+// PrintContinue prompts the user to press Enter to continue.
+func PrintContinue() {
 	fmt.Println("\nDrücke Enter um fortzufahren...")
 }
 
-func printEnterIsbnNumber() {
+// PrintEnterIsbnNumber prompts the user for an ISBN.
+func PrintEnterIsbnNumber() {
 	fmt.Println("Please enter the ISBN number:")
 }
 
-func printIsBookAvailable(isAvailable bool) {
+// PrintIsBookAvailable prints whether a book is available.
+func PrintIsBookAvailable(isAvailable bool) {
 	if isAvailable {
 		fmt.Println("Yes, the Book is available!")
 	} else {
@@ -52,7 +62,8 @@ func printIsBookAvailable(isAvailable bool) {
 	}
 }
 
-func printIsBookBorrowed(book *Book) {
+// PrintIsBookBorrowed prints the result of lending a book.
+func PrintIsBookBorrowed(book *model.Book) {
 	if book == nil {
 		fmt.Println("Sorry, book not available!")
 		return
@@ -60,7 +71,8 @@ func printIsBookBorrowed(book *Book) {
 	fmt.Println("Book:", book.ISBN, book.Title, "borrowed")
 }
 
-func printIsBookReturned(book *Book) {
+// PrintIsBookReturned prints the result of returning a book.
+func PrintIsBookReturned(book *model.Book) {
 	if book == nil {
 		fmt.Println("Sorry, we are not expecting this book!")
 		return
@@ -68,7 +80,8 @@ func printIsBookReturned(book *Book) {
 	fmt.Println("Book:", book.ISBN, book.Title, "returned")
 }
 
-func printIsBookRemoved(removed bool) {
+// PrintIsBookRemoved prints the result of removing a book.
+func PrintIsBookRemoved(removed bool) {
 	if removed {
 		fmt.Println("Book successfully removed!")
 	} else {

@@ -1,18 +1,20 @@
-package main
+package view
 
 import (
 	"testing"
+
+	"mvc-booklibrary/model"
 )
 
 func TestView_PrintBookList(t *testing.T) {
 	tests := []struct {
 		name         string
-		books        []Book
+		books        []model.Book
 		wantContains []string
 	}{
 		{
 			name: "mehrere Bücher",
-			books: []Book{
+			books: []model.Book{
 				{ISBN: "111", Title: "Clean Code", Author: "Martin", PublishedYear: 2008, Borrowed: false},
 				{ISBN: "222", Title: "The Pragmatic Programmer", Author: "Hunt", PublishedYear: 1999, Borrowed: true},
 			},
@@ -20,12 +22,12 @@ func TestView_PrintBookList(t *testing.T) {
 		},
 		{
 			name:         "einzelnes Buch",
-			books:        []Book{{ISBN: "42", Title: "Der Kaktus", Author: "Blume", PublishedYear: 2020, Borrowed: false}},
+			books:        []model.Book{{ISBN: "42", Title: "Der Kaktus", Author: "Blume", PublishedYear: 2020, Borrowed: false}},
 			wantContains: []string{"42", "Der Kaktus", "BORROWED: false"},
 		},
 		{
 			name:         "leere Liste",
-			books:        []Book{},
+			books:        []model.Book{},
 			wantContains: nil,
 		},
 	}
