@@ -28,14 +28,14 @@ test-verbose: ## Run all tests with verbose output, race detector and coverage
 vet: ## Run go vet for static analysis
 	go vet ./...
 
-run: ## Run the app in the selected MODE (default: cli)
-	go run . -mode $(MODE)
-
 run-http: ## Run the app as HTTP server on :8080
 	go run . -mode http
 
-run-both: ## Run CLI and HTTP server at the same time
-	go run . -mode both
+run-gin-http: ## Run the app as an HTTP server using Gin on :8080
+	go run . -mode gin-http
+
+run-terminal: ## Run the app in CLI mode
+	go run . -mode cli
 
 docker-build: ## Build the Docker image
 	docker compose build

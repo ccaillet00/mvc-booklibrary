@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"mvc-booklibrary/controller"
+	"mvc-booklibrary/gin_server"
 	"mvc-booklibrary/model"
 	"mvc-booklibrary/repository"
 	"mvc-booklibrary/server"
@@ -30,7 +31,7 @@ func resolveMode(flagValue string) string {
 }
 
 func main() {
-	modeFlag := flag.String("mode", "", "app mode: cli, http or both (default: $APP_MODE or cli)")
+	modeFlag := flag.String("mode", "", "app mode: cli, http or gin-http (default: $APP_MODE or cli)")
 	flag.Parse()
 	mode := resolveMode(*modeFlag)
 
@@ -44,29 +45,18 @@ func main() {
 		log.Println("HTTP server listening on :8080")
 		log.Fatal(http.ListenAndServe(":8080", srv.Routes()))
 
-	case "both":
-		// Run the CLI and the HTTP API at the same time.
-		ctrl := controller.NewController(m)
-		srv := server.NewServer(m)
-
-		go func() {
-			log.Println("HTTP server listening on :8080")
-			if err := http.ListenAndServe(":8080", srv.Routes()); err != nil {
-				log.Fatal(err)
-			}
-		}()
-
-		view.PrintMenu()
-		for {
-			ctrl.ExecuteCommand()
-		}
-
-	default: // "cli"
+	case "cli":
 		// Run only the terminal application.
 		ctrl := controller.NewController(m)
 		view.PrintMenu()
 		for {
 			ctrl.ExecuteCommand()
 		}
+
+	case "gin-http":
+		// Run the HTTP API using the Gin framework (blocking).
+		srv := gin_server.NewGinServer(m)
+		log.Println("HTTP server listening on :8080")
+		log.Fatal(http.ListenAndServe(":8080", srv.Routes()))
 	}
 }
