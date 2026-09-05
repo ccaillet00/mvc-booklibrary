@@ -38,6 +38,10 @@ func (m *Model) FindAllBooks() []Book {
 	return m.repo.FindAll()
 }
 
+func (m *Model) FindBook(isbn string) *Book {
+	return m.repo.FindByISBN(isbn)
+}
+
 // CheckBookAvailability checks if a book exists and is not borrowed.
 func (m *Model) CheckBookAvailability(isbn string) bool {
 	book := m.repo.FindByISBN(isbn)
